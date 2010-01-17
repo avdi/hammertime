@@ -1,16 +1,79 @@
 = hammertime
 
-Description goes here.
+An interactive error console similar to those found in Lisp and Smalltalk environments.
 
-== Note on Patches/Pull Requests
- 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+== Synopsis
+
+Simply require the Hammertime library:
+
+    require 'hammertime'
+
+    $broken = true
+
+    def faulty_method
+      raise "Oh no!" if $broken
+    end
+
+    3.times do |n|
+      puts "Attempt (#{n+1}/3)"
+      begin
+        faulty_method
+        puts "No error raised"
+      rescue => error
+        puts "Error raised: #{error.inspect}"
+      end
+    end
+
+When an error is raised, a menu of possible actions will be presented at the console:
+
+    === Stop! Hammertime. ===
+    An error has occurred at example.rb:4:in `raise_runtime_error'
+    The error is: #<RuntimeError: Oh no!>
+    1. Continue (process the exception normally)
+    2. Ignore (proceed without raising an exception)
+    3. Permit by type (don't ask about future errors of this type)
+    4. Permit by line (don't ask about future errors raised from this point)
+    5. Backtrace (show the call stack leading up to the error)
+    6. Debug (start a debugger)
+    7. Console (start an IRB session)
+    What now?
+
+This enables a fix-and-continue style of development:
+
+    $ ruby example.rb                                                
+    Attempt (1/3)
+
+    === Stop! Hammertime. ===
+    An error has occurred at example.rb:6:in `faulty_method'
+    The error is: #<RuntimeError: Oh no!>                   
+    1. Continue (process the exception normally)            
+    2. Ignore (proceed without raising an exception)        
+    3. Permit by type (don't ask about future errors of this type)
+    4. Permit by line (don't ask about future errors raised from this point)
+    5. Backtrace (show the call stack leading up to the error)              
+    6. Debug (start a debugger)                                             
+    7. Console (start an IRB session)                                       
+    What now?
+    7
+
+    >> $broken = false
+    => false
+    >> exit
+
+    1. Continue (process the exception normally)
+    2. Ignore (proceed without raising an exception)
+    3. Permit by type (don't ask about future errors of this type)
+    4. Permit by line (don't ask about future errors raised from this point)
+    5. Backtrace (show the call stack leading up to the error)
+    6. Debug (start a debugger)
+    7. Console (start an IRB session)
+    What now?
+    2
+    No error raised
+    Attempt (2/3)
+    No error raised
+    Attempt (3/3)
+    No error raised
 
 == Copyright
 
