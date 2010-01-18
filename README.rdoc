@@ -77,11 +77,12 @@ This enables a fix-and-continue style of development:
 
 == Known Bugs
 
- * Hammertime cannot intercept exceptions which are raised from native code.
+* Hammertime cannot intercept exceptions which are raised from native code.
 
 == TODO
 
- * Better integration with IRB to enable a "Retry" option.
+* Better integration with IRB to enable a "Retry" option.
+* Tests
 
 == Copyright
 
