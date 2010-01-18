@@ -28,6 +28,7 @@ or ruby-debug, and more.
      "Rakefile",
      "VERSION",
      "example.rb",
+     "hammertime.gemspec",
      "lib/hammertime.rb",
      "spec/hammertime_spec.rb",
      "spec/spec.opts",
