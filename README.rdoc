@@ -75,6 +75,14 @@ This enables a fix-and-continue style of development:
     Attempt (3/3)
     No error raised
 
+== Known Bugs
+
+ * Hammertime cannot intercept exceptions which are raised from native code.
+
+== TODO
+
+ * Better integration with IRB to enable a "Retry" option.
+
 == Copyright
 
 Copyright (c) 2010 Avdi Grimm. See LICENSE for details.
