@@ -82,6 +82,7 @@ This enables a fix-and-continue style of development:
 == TODO
 
 * Better integration with IRB to enable a "Retry" option.
+* Start console/debugger at fail site, instead of in Hammertime code.
 * Tests
 
 == Copyright
