@@ -49,16 +49,13 @@ or ruby-debug, and more.
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<ruby-debug>, ["~> 0.10"])
       s.add_runtime_dependency(%q<highline>, ["~> 1.5"])
       s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
     else
-      s.add_dependency(%q<ruby-debug>, ["~> 0.10"])
       s.add_dependency(%q<highline>, ["~> 1.5"])
       s.add_dependency(%q<rspec>, [">= 1.2.9"])
     end
   else
-    s.add_dependency(%q<ruby-debug>, ["~> 0.10"])
     s.add_dependency(%q<highline>, ["~> 1.5"])
     s.add_dependency(%q<rspec>, [">= 1.2.9"])
   end

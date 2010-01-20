@@ -1,5 +1,10 @@
 require 'highline'
-require 'ruby-debug'
+begin
+  require 'ruby-debug'
+  $hammertime_debug_support = true
+rescue LoadError
+  $hammertime_debug_support = false
+end
 
 module Hammertime
   def self.ignored_errors
@@ -81,7 +86,7 @@ module Hammertime
         menu.choice "Debug (start a debugger)" do
           debugger
           false
-        end
+        end if $hammertime_debug_support
         menu.choice "Console (start an IRB session)" do
           require 'irb'
           IRB.start
@@ -124,5 +129,5 @@ unless ::Object < Hammertime
   class ::Object
     include ::Hammertime
   end
-  Debugger.start
+  Debugger.start if $hammertime_debug_support
 end
