@@ -1,10 +1,4 @@
 require 'highline'
-begin
-  require 'ruby-debug'
-  $hammertime_debug_support = true
-rescue LoadError
-  $hammertime_debug_support = false
-end
 
 module Hammertime
   def self.ignored_errors
@@ -21,6 +15,15 @@ module Hammertime
 
   def self.stopped=(value)
     @stopped = value
+  end
+
+  def self.debug_supported?
+    require 'ruby-debug'
+    @debug_support = true
+  rescue LoadError
+    warn "Unable to load ruby-debug"
+    warn "Gem not installed or debugging not supported on your platform"
+    @debug_support = false
   end
 
   def hammertime_raise(*args)
@@ -83,10 +86,12 @@ module Hammertime
           backtrace.each do |frame| c.say frame end
           false
         end
-        menu.choice "Debug (start a debugger)" do
-          debugger
-          false
-        end if $hammertime_debug_support
+        if Hammertime.debug_supported?
+          menu.choice "Debug (start a debugger)" do
+            debugger
+            false
+          end
+        end
         menu.choice "Console (start an IRB session)" do
           require 'irb'
           IRB.start
