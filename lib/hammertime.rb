@@ -1,3 +1,4 @@
+require 'thread'
 require 'highline'
 
 module Hammertime
@@ -28,12 +29,15 @@ module Hammertime
 
   def hammertime_raise(*args)
     backtrace = caller(2)
-    Thread.exclusive do
-      error, backtrace = 
+    fallback = lambda do
+      hammertime_original_raise(*args)
+    end
+    exclusive_and_non_reentrant(fallback) do
+      error, backtrace =
         case args.size
         when 0 then [($!.nil? ? RuntimeError.new : $!), backtrace]
-        when 1 then 
-          if args[0].is_a?(String) 
+        when 1 then
+          if args[0].is_a?(String)
             [RuntimeError.exception(args[0]), backtrace]
           else
             [args[0].exception, backtrace]
@@ -52,7 +56,7 @@ module Hammertime
       else
         ::Hammertime.stopped = true
       end
-      
+
       c = ::Hammertime.hammertime_console
       c.say "\n"
       c.say "=== Stop! Hammertime. ==="
@@ -118,6 +122,14 @@ module Hammertime
 
   private
 
+  # No lazy initialization where threads are concerned. We still use
+  # ||= on the off chance that this file gets loaded twice in 1.8.
+  @mutex ||= Mutex.new
+
+  def self.mutex
+    @mutex
+  end
+
   def self.hammertime_console
     @console ||= HighLine.new($stdin, $stderr)
   end
@@ -128,6 +140,17 @@ module Hammertime
     return true if ::Hammertime.ignored_lines.include?(backtrace.first)
     return false
   end
+
+  def exclusive_and_non_reentrant(fallback, &block)
+    lock_acquired = ::Hammertime.mutex.try_lock
+    if lock_acquired
+      yield
+      ::Hammertime.mutex.unlock
+    else
+      fallback.call
+    end
+  end
+
 end
 
 unless ::Object < Hammertime
